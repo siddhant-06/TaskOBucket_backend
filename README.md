@@ -21,14 +21,14 @@ This project is built using:
 ### 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/Rohanchudasama55/NodeJS-Repository.git
+git clone https://github.com/siddhant-06/TaskOBucket_backend.git
 cd TaskOBucket
 
 npm install
 
 ## .env
 PORT=3000
-MONGO_URI=mongodb://localhost:27017/thyro-wellness
+MONGO_URI=mongodb://localhost:27017/taskOBucket
 JWT_SECRET=your_jwt_secret
 
 
