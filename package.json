@@ -1,0 +1,36 @@
+{
+  "name": "thyro-wellness",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test:coverage": "cmd /C \"nyc mocha --exit & rimraf .nyc_output coverage-report\"",
+    "generate:module": "node generateModule.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "chai": "^5.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mocha": "^11.2.2",
+    "mongoose": "^8.21.0",
+    "morgan": "^1.10.0",
+    "nodemailer": "^7.0.3",
+    "nyc": "^17.1.0",
+    "request": "^2.88.2",
+    "supertest": "^7.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11",
+    "rimraf": "^6.0.1"
+  }
+}
