@@ -6,7 +6,8 @@ import dotenv from 'dotenv';
 import { connectDB } from './src/config/dbConfig.js';
 import { sendSuccessResponse } from './src/common/response.js';
 import routes from './src/routes/index.js';
-
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './src/config/swaggerConfig.js';
 // Load environment variables
 dotenv.config();
 
@@ -34,6 +35,9 @@ app.use(
 
 // Enable request logging in development format
 app.use(morgan('dev'));
+
+// Setup Swagger UI for API documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Initialize and define routes
 routes.initialize(app);
