@@ -21,8 +21,8 @@ export const generateJwtToken = async (user) => {
   }
 };
 
-// Function to hash a plain text password using bcrypt
-export const hashPassword = async (password) => {
+//  Function to hash the user's password using bcrypt
+export const bcryptPassword = async (password) => {
   try {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
@@ -32,7 +32,7 @@ export const hashPassword = async (password) => {
 };
 
 // Function to compare a plain text password with a hashed password
-export const comparePassword = async (plainPassword, hashedPassword) => {
+export const bcryptComparePassword = async (plainPassword, hashedPassword) => {
   try {
     return await bcrypt.compare(plainPassword, hashedPassword);
   } catch (error) {
