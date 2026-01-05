@@ -4,8 +4,9 @@ import {
   bcryptPassword,
   generateJwtToken,
 } from '../common/authHelper.js';
+import crypto from 'crypto';
 
-export const login = async (data) => {
+export const loginService = async (data) => {
   try {
     const { email, password } = data;
 
@@ -21,7 +22,7 @@ export const login = async (data) => {
     // Checking if the provided password matches the hashed password stored in the database
     const isValidPassword = await bcryptComparePassword(
       password,
-      user[0].password
+      user[0].passwordHash
     );
 
     // If the password is incorrect, throw a 401 error
@@ -49,3 +50,30 @@ export const login = async (data) => {
     };
   }
 };
+
+export const forgotPasswordService = async (email) => {
+  try {
+    // Implementation for forgot password functionality
+    const user = await DatabaseHelper.findRecords('user.model', {
+      email,
+    });
+
+    if (user.length === 0) {
+      throw { statusCode: 404, message: 'User does not exist' };
+    }
+
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    await DatabaseHelper.updateRecordById('user.model', user[0]._id, {
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: Date.now() + 15 * 60 * 1000, // 15 mins
+    });
+    return { message: 'Password reset link has been sent to your email' };
+  } catch (error) {}
+};
+
+export const resetPasswordService = async (token, newPassword) => {};
