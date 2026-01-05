@@ -5,6 +5,7 @@ import {
   generateJwtToken,
 } from '../common/authHelper.js';
 import crypto from 'crypto';
+import { sendEmail } from '../common/nodemailer.js';
 
 export const loginService = async (data) => {
   try {
@@ -53,27 +54,53 @@ export const loginService = async (data) => {
 
 export const forgotPasswordService = async (email) => {
   try {
-    // Implementation for forgot password functionality
-    const user = await DatabaseHelper.findRecords('user.model', {
+    // Normalize email
+    const users = await DatabaseHelper.findRecords('user.model', {
       email,
     });
 
-    if (user.length === 0) {
-      throw { statusCode: 404, message: 'User does not exist' };
-    }
+    //  Do NOT reveal if user exists
+    if (!users.length) return;
 
+    const user = users[0];
+
+    // Generate secure reset token
     const resetToken = crypto.randomBytes(20).toString('hex');
+
+    // Hash token before saving
     const hashedToken = crypto
       .createHash('sha256')
       .update(resetToken)
       .digest('hex');
 
-    await DatabaseHelper.updateRecordById('user.model', user[0]._id, {
+    // Save hashed token & expiry
+    await DatabaseHelper.updateRecordById('user.model', user._id, {
       resetPasswordToken: hashedToken,
       resetPasswordExpires: Date.now() + 15 * 60 * 1000, // 15 mins
     });
-    return { message: 'Password reset link has been sent to your email' };
-  } catch (error) {}
+
+    // Create reset link
+    const resetLink = `${(process.env, FRONTEND_URL)}/reset-password?token=${resetToken}`;
+
+    // Send reset email
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset Request',
+      html: `
+      <p>You requested a password reset.</p>
+      <p>
+        <a href="${resetLink}">Click here to reset your password</a>
+      </p>
+      <p>This link will expire in 15 minutes.</p>
+    `,
+    });
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Error during forgot password process',
+      details: error.details || null,
+    };
+  }
 };
 
 export const resetPasswordService = async (token, newPassword) => {};
