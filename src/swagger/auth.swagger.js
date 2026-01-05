@@ -2,8 +2,9 @@
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: User login
  *     tags: [Auth]
+ *     operationId: user_login
+ *     summary: User login
  *     requestBody:
  *       required: true
  *       content:
