@@ -8,6 +8,8 @@ const UserSchema = new mongoose.Schema(
     avatarUrl: { type: String },
     jobTitle: { type: String },
     isActive: { type: Boolean, default: true },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
   },
   { timestamps: true }
 );
