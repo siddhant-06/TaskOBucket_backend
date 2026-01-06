@@ -66,6 +66,7 @@ export const forgotPasswordService = async (email) => {
 
     // Generate secure reset token
     const resetToken = crypto.randomBytes(20).toString('hex');
+    console.log('🚀 ~ forgotPasswordService ~ resetToken:', resetToken);
 
     // Hash token before saving
     const hashedToken = crypto
