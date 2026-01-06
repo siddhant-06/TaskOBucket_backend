@@ -121,6 +121,14 @@ export const resetPasswordService = async (token, newPassword) => {
 
     const user = users[0];
 
+    // const isSamePassword = await bcryptComparePassword(
+    //   newPassword,
+    //   user.passwordHash
+    // );
+    // if (isSamePassword) {
+    //   throw { statusCode: 400, message: 'New password must be different' };
+    // }
+
     // Hash new password
     const hashedPassword = await bcryptPassword(newPassword);
 

@@ -11,4 +11,10 @@ export const forgotPasswordValidation = Joi.object({
 export const resetPasswordValidation = Joi.object({
   token: Joi.string().hex().required(),
   newPassword: Joi.string().min(6).max(30).required(),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref('newPassword'))
+    .required()
+    .messages({
+      'any.only': 'Confirm password does not match new password',
+    }),
 });

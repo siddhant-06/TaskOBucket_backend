@@ -43,7 +43,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 routes.initialize(app);
 
 // Default route to check if the project is running
-app.use('/', function (req, res, next) {
+app.use('/health', function (req, res, next) {
   return sendSuccessResponse(res, 'Project working successfully!', {}, 200);
 });
 
