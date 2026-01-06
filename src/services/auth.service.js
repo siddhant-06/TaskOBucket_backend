@@ -63,6 +63,9 @@ export const forgotPasswordService = async (email) => {
     }
 
     const resetToken = crypto.randomBytes(20).toString('hex');
+    console.log('🚀 ~ forgotPasswordService ~ resetToken:', resetToken);
+
+    // Hash token before saving
     const hashedToken = crypto
       .createHash('sha256')
       .update(resetToken)
@@ -72,8 +75,63 @@ export const forgotPasswordService = async (email) => {
       resetPasswordToken: hashedToken,
       resetPasswordExpires: Date.now() + 15 * 60 * 1000, // 15 mins
     });
-    return { message: 'Password reset link has been sent to your email' };
-  } catch (error) {}
+
+    // Create reset link
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+    // Send reset email
+    await sendEmail({
+      to: user.email,
+      subject: 'Reset your TaskOBucket password',
+      html: `
+      <p>You requested a password reset.</p>
+      <p>
+        <a href="${resetLink}">Click here to reset your password</a>
+      </p>
+      <p>This link will expire in 15 minutes.</p>
+    `,
+    });
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Error during forgot password process',
+      details: error.details || null,
+    };
+  }
 };
 
-export const resetPasswordService = async (token, newPassword) => {};
+export const resetPasswordService = async (token, newPassword) => {
+  try {
+    // Hash token before saving
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    console.log('🚀 ~ resetPasswordService ~ hashedToken:', hashedToken);
+
+    // Find valid user with unexpired token
+    const users = await DatabaseHelper.findRecords('user.model', {
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (users.length === 0) {
+      throw { statusCode: 400, message: 'Invalid or expired token' };
+    }
+
+    const user = users[0];
+
+    // Hash new password
+    const hashedPassword = await bcryptPassword(newPassword);
+
+    // Update user's password and clear reset token fields
+    await DatabaseHelper.updateRecordById('user.model', user._id, {
+      passwordHash: hashedPassword,
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
+    });
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Error during password reset process',
+      details: error.details || null,
+    };
+  }
+};

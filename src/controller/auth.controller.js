@@ -21,7 +21,7 @@ export const loginController = async (req, res) => {
   }
 };
 
-const forgotPasswordController = async (req, res) => {
+export const forgotPasswordController = async (req, res) => {
   try {
     const { email } = req.body;
     await AuthService.forgotPasswordService(email);
@@ -40,7 +40,7 @@ const forgotPasswordController = async (req, res) => {
   }
 };
 
-const resetPasswordController = async (req, res) => {
+export const resetPasswordController = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
     await AuthService.resetPasswordService(token, newPassword);

@@ -11,7 +11,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:7000',
+        url: process.env.BASE_URL || 'http://localhost:7000',
       },
     ],
     components: {
