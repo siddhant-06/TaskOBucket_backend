@@ -1,15 +1,15 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import { connectDB } from './src/config/dbConfig.js';
 import { sendSuccessResponse } from './src/common/response.js';
 import routes from './src/routes/index.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './src/config/swaggerConfig.js';
 // Load environment variables
-dotenv.config();
 
 // Connect to the database
 connectDB();
@@ -43,7 +43,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 routes.initialize(app);
 
 // Default route to check if the project is running
-app.use('/', function (req, res, next) {
+app.use('/health', function (req, res, next) {
   return sendSuccessResponse(res, 'Project working successfully!', {}, 200);
 });
 

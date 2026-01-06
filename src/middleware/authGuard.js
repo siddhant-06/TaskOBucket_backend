@@ -6,7 +6,7 @@ import { sendErrorResponse } from '../common/response.js';
 // configure dotenv
 dotenv.config();
 
-export const authGaurd = async (req, res, next) => {
+export const authGuard = async (req, res, next) => {
   try {
     // Extract Token from Authorization Header
     const accessToken = req.headers['authorization'];

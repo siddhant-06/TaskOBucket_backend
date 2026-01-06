@@ -148,15 +148,15 @@ import * as controller from '../controller/${moduleName}.controller.js';
 import { payloadValidate } from '../middleware/validatorMiddleware.js';
 import { create${capitalized}Validation, update${capitalized}Validation } from '../validation/${moduleName}.validation.js';
 import routes from '../config/${moduleName}Routes.config.js';
-import { authGaurd } from '../middleware/authGaurd.js';
+import { authGuard } from '../middleware/authGuard.js';
 
 const ${moduleName}Routes = express.Router();
 
 ${moduleName}Routes.post(routes.create, payloadValidate(create${capitalized}Validation), controller.create${capitalized}Controller);
-${moduleName}Routes.get(routes.getAll, authGaurd, controller.get${capitalized}Controller);
-${moduleName}Routes.get(routes.getById, authGaurd, controller.getById${capitalized}Controller);
-${moduleName}Routes.put(routes.update, authGaurd, payloadValidate(update${capitalized}Validation), controller.update${capitalized}Controller);
-${moduleName}Routes.delete(routes.delete, authGaurd, controller.delete${capitalized}Controller);
+${moduleName}Routes.get(routes.getAll, authGuard, controller.get${capitalized}Controller);
+${moduleName}Routes.get(routes.getById, authGuard, controller.getById${capitalized}Controller);
+${moduleName}Routes.put(routes.update, authGuard, payloadValidate(update${capitalized}Validation), controller.update${capitalized}Controller);
+${moduleName}Routes.delete(routes.delete, authGuard, controller.delete${capitalized}Controller);
 
 export default ${moduleName}Routes;
 `

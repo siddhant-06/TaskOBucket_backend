@@ -66,6 +66,7 @@ export const forgotPasswordService = async (email) => {
 
     // Generate secure reset token
     const resetToken = crypto.randomBytes(20).toString('hex');
+    console.log('🚀 ~ forgotPasswordService ~ resetToken:', resetToken);
 
     // Hash token before saving
     const hashedToken = crypto
@@ -80,12 +81,12 @@ export const forgotPasswordService = async (email) => {
     });
 
     // Create reset link
-    const resetLink = `${(process.env, FRONTEND_URL)}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
     // Send reset email
     await sendEmail({
       to: user.email,
-      subject: 'Password Reset Request',
+      subject: 'Reset your TaskOBucket password',
       html: `
       <p>You requested a password reset.</p>
       <p>
@@ -103,4 +104,45 @@ export const forgotPasswordService = async (email) => {
   }
 };
 
-export const resetPasswordService = async (token, newPassword) => {};
+export const resetPasswordService = async (token, newPassword) => {
+  try {
+    // Hash token before saving
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Find valid user with unexpired token
+    const users = await DatabaseHelper.findRecords('user.model', {
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (users.length === 0) {
+      throw { statusCode: 400, message: 'Invalid or expired token' };
+    }
+
+    const user = users[0];
+
+    // const isSamePassword = await bcryptComparePassword(
+    //   newPassword,
+    //   user.passwordHash
+    // );
+    // if (isSamePassword) {
+    //   throw { statusCode: 400, message: 'New password must be different' };
+    // }
+
+    // Hash new password
+    const hashedPassword = await bcryptPassword(newPassword);
+
+    // Update user's password and clear reset token fields
+    await DatabaseHelper.updateRecordById('user.model', user._id, {
+      passwordHash: hashedPassword,
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
+    });
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Error during password reset process',
+      details: error.details || null,
+    };
+  }
+};
