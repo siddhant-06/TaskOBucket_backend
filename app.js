@@ -22,6 +22,12 @@ app.use(helmet());
 
 // Enable CORS for all origins and allow credentials
 app.use(cors({ origin: '*', credentials: true }));
+// app.use(
+//   cors({
+//     origin: true,
+//     credentials: true,
+//   })
+// );
 
 // Enable Express to parse incoming JSON requests with a body size limit
 app.use(

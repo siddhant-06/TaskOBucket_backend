@@ -1,5 +1,16 @@
 // This file contains all the constants used in the application
 export const constants = {
+  //Auth related constants
+  Auth: {
+    LOGIN_SUCCESS: 'Login successful',
+    LOGIN_FAILED: 'Invalid email or password',
+    USER_NOT_FOUND: 'User does not exist',
+    PASSWORD_INCORRECT: 'Incorrect password',
+    FORGOT_PASSWORD_SUCCESS: 'Password reset link sent to email',
+    RESET_PASSWORD_SUCCESS: 'Password reset successfully',
+    RESET_TOKEN_INVALID: 'Invalid or expired token',
+    SERVER_ERROR: 'Internal Server Error',
+  },
   //User related constants
   User: {
     USER_CREATED: 'User created successfully',
@@ -17,5 +28,17 @@ export const constants = {
     USER_FOUND: 'User found successfully',
     NO_DATA_PROVIDED: 'No data provided to update',
     USER_ID_ARRAY_REQUIRED: 'User IDs array required',
+  },
+
+  //Organization related constants
+  Organization: {
+    ORG_CREATED: 'Organization created successfully',
+    ORG_NOT_CREATED: 'Organization creation failed',
+    ORG_KEY_EXISTS: 'Organization key already exists',
+    ORG_ALREADY_ASSIGNED: 'User already belongs to an organization',
+    ORG_NOT_FOUND: 'Organization not found',
+    ORG_ID_REQUIRED: 'Organization ID is required',
+    ORG_FETCHED: 'Organization fetched successfully',
+    SERVER_ERROR: 'Internal Server Error',
   },
 };

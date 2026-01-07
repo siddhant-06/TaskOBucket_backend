@@ -59,7 +59,6 @@ export const GetAllUsersController = async (req, res) => {
 export const getUserByIdController = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('🚀 ~ getUserByIdController ~ id:', id);
 
     if (!id) {
       return sendErrorResponse(res, 400, userConstant.USER_ID_REQUIRED);
@@ -70,7 +69,6 @@ export const getUserByIdController = async (req, res) => {
       return sendErrorResponse(res, 404, userConstant.USER_NOT_FOUND);
     }
 
-    console.log('🚀 ~ getUserByIdController ~ res:', res);
     return sendSuccessResponse(res, userConstant.USER_FETCHED, user, 200);
   } catch (error) {
     return sendErrorResponse(
@@ -120,14 +118,13 @@ export const updateUserController = async (req, res) => {
 export const deleteUserController = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('🚀 ~ deleteUserController ~ id:', id);
+
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return sendErrorResponse(res, 400, userConstant.USER_ID_REQUIRED);
     }
 
     const deletedUser = await UserService.deleteUserService(id);
-    console.log('🚀 ~ deleteUserController ~ deletedUser:', deletedUser);
 
     if (!deletedUser) {
       sendErrorResponse(res, 404, userConstant.USER_NOT_FOUND);
