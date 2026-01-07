@@ -15,7 +15,7 @@ export const loginService = async (data) => {
     const user = await DatabaseHelper.findRecords('user.model', { email });
 
     if (user.length === 0) {
-      throw { statusCode: 404, message: 'User does not exist' };
+      throw { statusCode: 404, message: authConstant.USER_NOT_FOUND };
     }
 
     const hashedPassword = await bcryptPassword(password);
@@ -28,7 +28,7 @@ export const loginService = async (data) => {
 
     // If the password is incorrect, throw a 401 error
     if (!isValidPassword) {
-      throw { statusCode: 401, message: 'incorrect password' };
+      throw { statusCode: 401, message: authConstant.PASSWORD_INCORRECT };
     }
 
     // Generate a JWT token for the user on successful login
@@ -41,13 +41,10 @@ export const loginService = async (data) => {
       name: user.name,
     };
   } catch (error) {
-    console.log('Error in AuthService login method:', error);
-
     // Catch any errors, set appropriate status code and message, and return them
     throw {
       statusCode: error.statusCode || 500,
-      message: error.message || 'Error during login',
-      details: error.details || null,
+      message: error.message || authConstant.SERVER_ERROR,
     };
   }
 };
@@ -66,7 +63,6 @@ export const forgotPasswordService = async (email) => {
 
     // Generate secure reset token
     const resetToken = crypto.randomBytes(20).toString('hex');
-    console.log('🚀 ~ forgotPasswordService ~ resetToken:', resetToken);
 
     // Hash token before saving
     const hashedToken = crypto
@@ -98,7 +94,7 @@ export const forgotPasswordService = async (email) => {
   } catch (error) {
     throw {
       statusCode: error.statusCode || 500,
-      message: error.message || 'Error during forgot password process',
+      message: error.message || authConstant.SERVER_ERROR,
       details: error.details || null,
     };
   }
@@ -116,7 +112,7 @@ export const resetPasswordService = async (token, newPassword) => {
     });
 
     if (users.length === 0) {
-      throw { statusCode: 400, message: 'Invalid or expired token' };
+      throw { statusCode: 400, message: authConstant.RESET_TOKEN_INVALID };
     }
 
     const user = users[0];
@@ -141,7 +137,7 @@ export const resetPasswordService = async (token, newPassword) => {
   } catch (error) {
     throw {
       statusCode: error.statusCode || 500,
-      message: error.message || 'Error during password reset process',
+      message: error.message || authConstant.SERVER_ERROR,
       details: error.details || null,
     };
   }
