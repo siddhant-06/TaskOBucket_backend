@@ -35,9 +35,25 @@ export const GetAllUsersController = async (req, res) => {
   try {
     const { limit, page, search } = req.query;
 
-    const options = {
-      filter: search ? { name: { $regex: search, $options: 'i' } } : {},
+    const loggedInUser = req.user;
+
+    //  Base filter: same organization only
+    const filter = {
+      organizationId: loggedInUser.organizationId,
     };
+
+    // 🔍 Search
+    if (search) {
+      filter.name = { $regex: search, $options: 'i' };
+    }
+
+    //  Role-based restriction
+    if (!loggedInUser.isOrgAdmin) {
+      // Non-admin can see only themselves
+      filter._id = loggedInUser._id;
+    }
+
+    const options = { filter };
 
     if (limit && page) {
       options.limit = parseInt(limit, 10);
@@ -50,8 +66,8 @@ export const GetAllUsersController = async (req, res) => {
   } catch (error) {
     return sendErrorResponse(
       res,
-      error.statusCode ? error.statusCode : 500,
-      error.message ? error.message : error || userConstant.SERVER_ERROR
+      error.statusCode || 500,
+      error.message || userConstant.SERVER_ERROR
     );
   }
 };
@@ -146,7 +162,6 @@ export const deleteUserController = async (req, res) => {
 };
 
 //Controller to delete all users
-
 export const deleteAllUsersController = async (req, res) => {
   try {
     const { ids } = req.body;
@@ -177,6 +192,47 @@ export const deleteAllUsersController = async (req, res) => {
       res,
       error.statusCode ? error.statusCode : 500,
       error.message ? error.message : error || userConstant.SERVER_ERROR
+    );
+  }
+};
+
+//Controller to  invite user via email
+export const inviteUserController = async (req, res) => {
+  try {
+    const { email, name } = req.body;
+
+    // Logged-in admin (from authGuard)
+    const adminUser = req.user;
+
+    await UserService.inviteUserService({ email, name }, adminUser);
+
+    return sendSuccessResponse(res, userConstant.USER_INVITE_SENT, {}, 200);
+  } catch (error) {
+    return sendErrorResponse(
+      res,
+      error.statusCode || 500,
+      error.message || userConstant.SERVER_ERROR
+    );
+  }
+};
+
+// Controller to accept user invite
+export const acceptInviteController = async (req, res) => {
+  try {
+    const { token, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return sendErrorResponse(res, 400, userConstant.PASSWORD_MISMATCH);
+    }
+
+    await UserService.acceptInviteService(token, password);
+
+    return sendSuccessResponse(res, userConstant.INVITE_ACCEPTED, {}, 200);
+  } catch (error) {
+    return sendErrorResponse(
+      res,
+      error.statusCode || 500,
+      error.message || userConstant.SERVER_ERROR
     );
   }
 };

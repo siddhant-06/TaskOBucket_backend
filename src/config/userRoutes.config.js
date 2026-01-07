@@ -5,5 +5,7 @@ const userRoutesList = {
   update: '/user-update/:id',
   delete: '/user-delete/:id',
   deleteMany: '/user-delete',
+  invite: '/invite',
+  acceptInvite: '/accept-invite',
 };
 export default userRoutesList;

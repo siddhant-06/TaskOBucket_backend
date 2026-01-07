@@ -1,11 +1,11 @@
-//? For login
+//? User Login
 /**
  * @swagger
  * /api/auth/login:
  *   post:
  *     tags: [Auth]
- *     operationId: user_login
  *     summary: User login
+ *     description: Authenticates user and returns JWT token. If requiresSetup is true, frontend must redirect user to organization setup.
  *     requestBody:
  *       required: true
  *       content:
@@ -30,10 +30,16 @@
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 200
  *                 message:
  *                   type: string
  *                   example: Login Successful
- *                 data:
+ *                 result:
  *                   type: object
  *                   properties:
  *                     token:
@@ -42,8 +48,13 @@
  *                     name:
  *                       type: string
  *                       example: John Doe
+ *                     requiresSetup:
+ *                       type: boolean
+ *                       example: true
  *       401:
  *         description: Invalid email or password
+ *       404:
+ *         description: User not found
  *       500:
  *         description: Internal server error
  */
