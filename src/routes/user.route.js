@@ -3,11 +3,13 @@ import routeName from '../config/userRoutes.config.js';
 import * as userController from '../controller/user.controller.js';
 import { payloadValidate } from '../middleware/validatorMiddleware.js';
 import {
+  acceptInviteValidation,
   createUserValidation,
   deleteMultipleUsersValidation,
   deleteUserValidation,
   getUserByIdValidation,
   getUsersValidation,
+  inviteUserValidation,
   updateUserValidation,
 } from '../validation/user.validation.js';
 import { authGuard } from '../middleware/authGuard.js';
@@ -60,4 +62,20 @@ userRoutes.put(
   payloadValidate(deleteMultipleUsersValidation),
   userController.deleteAllUsersController
 );
+
+/** Invite  users */
+userRoutes.post(
+  routeName.invite,
+  authGuard,
+  payloadValidate(inviteUserValidation),
+  userController.inviteUserController
+);
+
+/** Accept invite  users */
+userRoutes.post(
+  routeName.acceptInvite,
+  payloadValidate(acceptInviteValidation),
+  userController.acceptInviteController
+);
+
 export default userRoutes;

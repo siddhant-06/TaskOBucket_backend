@@ -28,6 +28,11 @@ export const constants = {
     USER_FOUND: 'User found successfully',
     NO_DATA_PROVIDED: 'No data provided to update',
     USER_ID_ARRAY_REQUIRED: 'User IDs array required',
+
+    //  Invite flow
+    USER_ALREADY_INVITED: 'User already invited',
+    INVALID_INVITE_TOKEN: 'Invalid or expired invite token',
+    ACCEPT_INVITE_FAILED: 'Failed to accept invitation',
   },
 
   //Organization related constants
@@ -39,6 +44,15 @@ export const constants = {
     ORG_NOT_FOUND: 'Organization not found',
     ORG_ID_REQUIRED: 'Organization ID is required',
     ORG_FETCHED: 'Organization fetched successfully',
+    SERVER_ERROR: 'Internal Server Error',
+  },
+
+  Project: {
+    PROJECT_CREATED: 'Project created successfully',
+    PROJECT_NOT_CREATED: 'Project creation failed',
+    PROJECT_KEY_EXISTS: 'Project key already exists',
+    USER_NO_ORG: 'User does not belong to any organization',
+    ONLY_ADMIN: 'Only organization admin can create project',
     SERVER_ERROR: 'Internal Server Error',
   },
 };

@@ -7,46 +7,60 @@ import {
 import crypto from 'crypto';
 import { sendEmail } from '../common/nodemailer.js';
 
-export const loginService = async (data) => {
-  try {
-    const { email, password } = data;
+export const loginService = async ({ email, password }) => {
+  // Find user
+  const users = await DatabaseHelper.findRecords('user.model', { email });
 
-    // Check if the user exists in the database
-    const user = await DatabaseHelper.findRecords('user.model', { email });
-
-    if (user.length === 0) {
-      throw { statusCode: 404, message: authConstant.USER_NOT_FOUND };
-    }
-
+  // 🚀 FIRST-TIME ADMIN LOGIN (BOOTSTRAP)
+  if (!users.length) {
     const hashedPassword = await bcryptPassword(password);
 
-    // Checking if the provided password matches the hashed password stored in the database
-    const isValidPassword = await bcryptComparePassword(
-      password,
-      user[0].passwordHash
-    );
+    const newUser = await DatabaseHelper.createRecord('user.model', {
+      email,
+      passwordHash: hashedPassword,
+      isActive: true,
+      isOrgAdmin: true,
+    });
 
-    // If the password is incorrect, throw a 401 error
-    if (!isValidPassword) {
-      throw { statusCode: 401, message: authConstant.PASSWORD_INCORRECT };
-    }
+    const token = await generateJwtToken(newUser);
 
-    // Generate a JWT token for the user on successful login
-    const token = await generateJwtToken(user[0]);
-
-    // Return the token and user details (role and name)
     return {
       token,
-      //   role: user.role,
-      name: user.name,
-    };
-  } catch (error) {
-    // Catch any errors, set appropriate status code and message, and return them
-    throw {
-      statusCode: error.statusCode || 500,
-      message: error.message || authConstant.SERVER_ERROR,
+      name: newUser.name || '',
+      requiresSetup: true,
+      id: newUser._id,
     };
   }
+
+  const user = users[0];
+
+  // ❌ User exists but not activated (invite not accepted)
+  if (!user.isActive || !user.passwordHash) {
+    throw {
+      statusCode: 403,
+      message: authConstant.USER_NOT_ACTIVATED,
+    };
+  }
+
+  // Validate password
+  const isValidPassword = await bcryptComparePassword(
+    password,
+    user.passwordHash
+  );
+
+  if (!isValidPassword) {
+    throw {
+      statusCode: 401,
+      message: authConstant.PASSWORD_INCORRECT,
+    };
+  }
+
+  const token = await generateJwtToken(user);
+
+  return {
+    token,
+    name: user.name,
+  };
 };
 
 export const forgotPasswordService = async (email) => {
@@ -77,7 +91,7 @@ export const forgotPasswordService = async (email) => {
     });
 
     // Create reset link
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}?token=${resetToken}`;
 
     // Send reset email
     await sendEmail({

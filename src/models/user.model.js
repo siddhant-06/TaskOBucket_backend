@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, trim: true },
     email: { type: String, required: true, unique: true },
     passwordHash: { type: String },
     avatarUrl: { type: String },
@@ -16,9 +16,14 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    isActive: { type: Boolean, default: true },
+    isActive: { type: Boolean, default: false },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
+    work_email: { type: String },
+    company_name: { type: String, trim: true },
+    isInvited: { type: Boolean, default: false },
+    inviteToken: { type: String },
+    inviteTokenExpires: { type: Date },
   },
   { timestamps: true }
 );
