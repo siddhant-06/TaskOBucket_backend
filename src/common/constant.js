@@ -6,6 +6,8 @@ export const constants = {
     LOGIN_FAILED: 'Invalid email or password',
     USER_NOT_FOUND: 'User does not exist',
     PASSWORD_INCORRECT: 'Incorrect password',
+    USER_NOT_ACTIVATED:
+      'Your account is not activated yet. Please accept the invitation.',
     FORGOT_PASSWORD_SUCCESS: 'Password reset link sent to email',
     RESET_PASSWORD_SUCCESS: 'Password reset successfully',
     RESET_TOKEN_INVALID: 'Invalid or expired token',
@@ -29,10 +31,17 @@ export const constants = {
     NO_DATA_PROVIDED: 'No data provided to update',
     USER_ID_ARRAY_REQUIRED: 'User IDs array required',
 
-    //  Invite flow
+    // Invite flow
+    ONLY_ADMIN_CAN_INVITE: 'Only organization admin can invite users',
+    USER_ALREADY_IN_ORG: 'User already belongs to another organization',
     USER_ALREADY_INVITED: 'User already invited',
+    USER_INVITE_SENT: 'Invitation email sent successfully',
+    USER_INVITE_FAILED: 'Failed to send user invitation',
     INVALID_INVITE_TOKEN: 'Invalid or expired invite token',
+    PASSWORD_MISMATCH: 'Password and confirm password do not match',
+    INVITE_ACCEPTED: 'Invitation accepted successfully',
     ACCEPT_INVITE_FAILED: 'Failed to accept invitation',
+    USER_ALREADY_INVITED: 'User has already been invited',
   },
 
   //Organization related constants

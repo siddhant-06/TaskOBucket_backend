@@ -6,12 +6,14 @@ import {
 } from '../common/authHelper.js';
 import crypto from 'crypto';
 import { sendEmail } from '../common/nodemailer.js';
+import { constants } from '../common/constant.js';
 
+const authConstant = constants.Auth;
 export const loginService = async ({ email, password }) => {
   // Find user
   const users = await DatabaseHelper.findRecords('user.model', { email });
 
-  // 🚀 FIRST-TIME ADMIN LOGIN (BOOTSTRAP)
+  //  FIRST-TIME ADMIN LOGIN (BOOTSTRAP)
   if (!users.length) {
     const hashedPassword = await bcryptPassword(password);
 
@@ -34,7 +36,7 @@ export const loginService = async ({ email, password }) => {
 
   const user = users[0];
 
-  // ❌ User exists but not activated (invite not accepted)
+  //  User exists but not activated (invite not accepted)
   if (!user.isActive || !user.passwordHash) {
     throw {
       statusCode: 403,

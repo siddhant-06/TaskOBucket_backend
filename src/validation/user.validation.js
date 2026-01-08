@@ -44,7 +44,7 @@ export const inviteUserValidation = Joi.object({
 });
 
 export const acceptInviteValidation = Joi.object({
-  token: Joi.string().required(),
+  // token: Joi.string().required(),
   password: Joi.string().min(6).required(),
   confirmPassword: Joi.string().required(),
 });
