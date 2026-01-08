@@ -2,6 +2,8 @@ import * as DataBaseHelper from '../common/baseRepository.js';
 import { constants } from '../common/constant.js';
 
 const projectConstant = constants.Project;
+
+// Service to create a new project
 export const projectCreateService = async (data, userId) => {
   try {
     // fetch user
@@ -60,7 +62,7 @@ export const projectCreateService = async (data, userId) => {
         await DataBaseHelper.createRecord('projectMember.model', {
           projectId: project._id,
           userId: member.userId,
-          role: member.role,
+          role: member.role || 'DEV',
         });
       }
     }
@@ -69,6 +71,73 @@ export const projectCreateService = async (data, userId) => {
     throw {
       statusCode: error.statusCode || 500,
       message: error.message || projectConstant.PROJECT_NOT_CREATED,
+    };
+  }
+};
+
+// Service to get a project by ID
+export const getProjectByIdService = async (id) => {
+  try {
+    return await DataBaseHelper.getRecordById('project.model', id);
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Service to update a project by ID
+export const updateProjectService = async (projectId, updateData, userId) => {
+  try {
+    // Fetch user
+    const user = await DataBaseHelper.getRecordById('user.model', userId);
+    if (!user) {
+      throw { statusCode: 404, message: constants.User.USER_NOT_FOUND };
+    }
+
+    // Fetch project
+    const project = await DataBaseHelper.getRecordById(
+      'project.model',
+      projectId
+    );
+    if (!project) {
+      throw {
+        statusCode: 404,
+        message: projectConstant.PROJECT_NOT_FOUND,
+      };
+    }
+
+    // Org check
+    if (project.organizationId.toString() !== user.organizationId.toString()) {
+      throw {
+        statusCode: 403,
+        message: projectConstant.UNAUTHORIZED_PROJECT_ACCESS,
+      };
+    }
+
+    // Permission check (Admin or PM)
+    if (!user.isOrgAdmin) {
+      const member = await DataBaseHelper.findRecords('projectMember.model', {
+        projectId,
+        userId,
+        role: 'PM',
+      });
+
+      if (!member.length) {
+        throw {
+          statusCode: 403,
+          message: projectConstant.ONLY_ADMIN_OR_PM,
+        };
+      }
+    }
+
+    return await DataBaseHelper.updateRecordById(
+      'project.model',
+      projectId,
+      updateData
+    );
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || projectConstant.PROJECT_NOT_UPDATED,
     };
   }
 };
