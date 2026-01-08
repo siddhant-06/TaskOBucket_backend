@@ -59,9 +59,16 @@ export const constants = {
   Project: {
     PROJECT_CREATED: 'Project created successfully',
     PROJECT_NOT_CREATED: 'Project creation failed',
+    PROJECT_UPDATED: 'Project updated successfully',
+    PROJECT_NOT_UPDATED: 'Project update failed',
+    PROJECT_FETCHED: 'Project fetched successfully',
+    PROJECT_NOT_FOUND: 'Project not found',
+    PROJECT_ID_REQUIRED: 'Project ID is required',
     PROJECT_KEY_EXISTS: 'Project key already exists',
     USER_NO_ORG: 'User does not belong to any organization',
     ONLY_ADMIN: 'Only organization admin can create project',
+    ONLY_ADMIN_OR_PM: 'Only admin or project manager can update project',
+    UNAUTHORIZED_PROJECT_ACCESS: 'Unauthorized project access',
     SERVER_ERROR: 'Internal Server Error',
   },
 };
