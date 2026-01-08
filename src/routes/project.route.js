@@ -55,4 +55,11 @@ projectRoutes.delete(
   projectController.projectBulkDeleteController
 );
 
+// users assignable
+projectRoutes.get(
+  routeName.assignableUser,
+  authGuard,
+  projectController.getProjectAssignableUsersController
+);
+
 export default projectRoutes;
