@@ -332,7 +332,15 @@
  *     summary: Accept user invitation
  *     description: >
  *       Allows an invited user to accept the invitation by setting a password.
- *       Validates the invite token and activates the user account.
+ *       The invite token is passed via query parameter.
+ *     parameters:
+ *       - in: query
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Invitation token received via email
+ *         example: 9f8d7c6b5a4e3d2c1b
  *     requestBody:
  *       required: true
  *       content:
@@ -340,13 +348,13 @@
  *           schema:
  *             type: object
  *             required:
- *               - token
  *               - password
+ *               - confirmPassword
  *             properties:
- *               token:
- *                 type: string
- *                 example: 9f8d7c6b5a4e3d2c1b
  *               password:
+ *                 type: string
+ *                 example: Password@123
+ *               confirmPassword:
  *                 type: string
  *                 example: Password@123
  *     responses:

@@ -219,7 +219,8 @@ export const inviteUserController = async (req, res) => {
 // Controller to accept user invite
 export const acceptInviteController = async (req, res) => {
   try {
-    const { token, password, confirmPassword } = req.body;
+    const { token } = req.query;
+    const { password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) {
       return sendErrorResponse(res, 400, userConstant.PASSWORD_MISMATCH);

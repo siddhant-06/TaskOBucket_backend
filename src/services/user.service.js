@@ -1,6 +1,10 @@
 import * as DataBaseHelper from '../common/baseRepository.js';
 import { bcryptPassword } from '../common/authHelper.js';
+import crypto from 'crypto';
+import { sendEmail } from '../common/nodemailer.js';
+import { constants } from '../common/constant.js';
 
+const userConstant = constants.User;
 // Service to create a new user
 export const createUserService = async (userData) => {
   try {
@@ -110,7 +114,8 @@ export const inviteUserService = async ({ email, name }, adminUser) => {
     } else {
       // If user already exists but belongs to another org
       if (
-        user.organizationId &&
+        user.organizationId !== null &&
+        adminUser.organizationId !== null &&
         user.organizationId.toString() !== adminUser.organizationId.toString()
       ) {
         throw {
@@ -118,6 +123,18 @@ export const inviteUserService = async ({ email, name }, adminUser) => {
           message: userConstant.USER_ALREADY_IN_ORG,
         };
       }
+    }
+
+    // Prevent re-inviting active invite
+    if (
+      user.isInvited &&
+      user.inviteTokenExpires &&
+      user.inviteTokenExpires > Date.now()
+    ) {
+      throw {
+        statusCode: 400,
+        message: userConstant.USER_ALREADY_INVITED,
+      };
     }
 
     /**  Generate invite token */
@@ -192,10 +209,10 @@ export const acceptInviteService = async (token, password) => {
     });
 
     /**  (Optional) Auto-login after accept invite */
-    const jwtToken = await generateJwtToken(user);
+    // const jwtToken = await generateJwtToken(user);
 
     return {
-      token: jwtToken,
+      // token: jwtToken,
       name: user.name,
     };
   } catch (error) {

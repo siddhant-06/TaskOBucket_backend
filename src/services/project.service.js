@@ -54,6 +54,16 @@ export const projectCreateService = async (data, userId) => {
       userId: userId,
       role: 'PM',
     });
+
+    if (data.teamMembers?.length) {
+      for (const member of data.teamMembers) {
+        await DataBaseHelper.createRecord('projectMember.model', {
+          projectId: project._id,
+          userId: member.userId,
+          role: member.role,
+        });
+      }
+    }
     return project;
   } catch (error) {
     throw {
