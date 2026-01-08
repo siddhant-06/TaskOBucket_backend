@@ -220,3 +220,22 @@ export const projectBulkDeleteService = async (projectIds, user) => {
     };
   }
 };
+
+export const getProjectAssignableUsersService = async (user) => {
+  try {
+    if (!user.organizationId) {
+      throw { statusCode: 400, message: 'User has no organization' };
+    }
+
+    return await DataBaseHelper.findRecords('user.model', {
+      organizationId: user.organizationId,
+      isOrgAdmin: false,
+      isActive: true,
+    });
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Failed to fetch users',
+    };
+  }
+};

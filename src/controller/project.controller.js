@@ -169,3 +169,19 @@ export const projectBulkDeleteController = async (req, res) => {
     );
   }
 };
+
+export const getProjectAssignableUsersController = async (req, res) => {
+  try {
+    const user = req.user;
+
+    const users = await ProjectService.getProjectAssignableUsersService(user);
+
+    return sendSuccessResponse(res, constants.User.USER_LISTED, users, 200);
+  } catch (error) {
+    return sendErrorResponse(
+      res,
+      error.statusCode || 500,
+      error.message || constants.User.SERVER_ERROR
+    );
+  }
+};

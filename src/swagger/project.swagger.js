@@ -140,3 +140,132 @@
  *       500:
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /api/user/project-assignable:
+ *   get:
+ *     tags: [User]
+ *     summary: Get users assignable to a project
+ *     description: >
+ *       Returns all active, non-admin users in the organization
+ *       for project team member selection.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Users fetched successfully
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+
+//? Get Project List
+/**
+ * @swagger
+ * /api/project/list:
+ *   get:
+ *     tags: [Project]
+ *     summary: Get all projects
+ *     description: >
+ *       Fetch a paginated list of active projects for the logged-in user's organization.
+ *       Supports search by project name or project key.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *           example: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: number
+ *           example: 10
+ *         description: Number of records per page
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *           example: CRM
+ *         description: Search by project name or key
+ *     responses:
+ *       200:
+ *         description: Project list fetched successfully
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+
+//? Delete Project
+/**
+ * @swagger
+ * /api/project/{id}:
+ *   delete:
+ *     tags: [Project]
+ *     summary: Delete a project
+ *     description: >
+ *       Deletes a single project belonging to the user's organization.
+ *       Only authorized users can delete projects.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: 64f1c2d3a12b4c001234abcd
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Project deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Internal server error
+ */
+
+//? Bulk Delete Projects
+/**
+ * @swagger
+ * /api/project/bulk-delete:
+ *   delete:
+ *     tags: [Project]
+ *     summary: Bulk delete projects
+ *     description: >
+ *       Deletes multiple projects at once for the logged-in user's organization.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - projectIds
+ *             properties:
+ *               projectIds:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example:
+ *                   - 64f1c2d3a12b4c001234abcd
+ *                   - 64f1c2d3a12b4c009999bbbb
+ *     responses:
+ *       200:
+ *         description: Projects deleted successfully
+ *       400:
+ *         description: Invalid projectIds array
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */

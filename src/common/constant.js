@@ -72,4 +72,20 @@ export const constants = {
     UNAUTHORIZED_PROJECT_ACCESS: 'Unauthorized project access',
     SERVER_ERROR: 'Internal Server Error',
   },
+
+  // sprints
+  Sprint: {
+    SPRINT_CREATED: 'Sprint created successfully',
+    SPRINT_UPDATED: 'Sprint updated successfully',
+    SPRINT_NOT_CREATED: 'Sprint creation failed',
+    SPRINT_NOT_UPDATED: 'Sprint update failed',
+    SPRINT_NOT_FOUND: 'Sprint not found',
+
+    USER_NO_ORG: 'User does not belong to any organization',
+    ONLY_ADMIN: 'Only organization admin can manage sprint',
+    UNAUTHORIZED_PROJECT_ACCESS: 'Unauthorized project access',
+    INVALID_DATE_RANGE: 'Start date must be before end date',
+
+    SERVER_ERROR: 'Internal Server Error',
+  },
 };
