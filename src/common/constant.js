@@ -57,6 +57,7 @@ export const constants = {
   },
 
   Project: {
+    PROJECT_LIST_FETCHED: 'Project list fetched successfully',
     PROJECT_CREATED: 'Project created successfully',
     PROJECT_NOT_CREATED: 'Project creation failed',
     PROJECT_KEY_EXISTS: 'Project key already exists',
