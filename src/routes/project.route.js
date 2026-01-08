@@ -34,5 +34,25 @@ projectRoutes.put(
   payloadValidate(updateProjectValidation),
   projectController.updateProjectController
 );
+// list projects
+projectRoutes.get(
+  routeName.list,
+  authGuard,
+  projectController.projectListController
+);
+
+// delete single project
+projectRoutes.delete(
+  routeName.delete,
+  authGuard,
+  projectController.projectDeleteController
+);
+
+// delete multiple projects
+projectRoutes.delete(
+  routeName.bulkDelete,
+  authGuard,
+  projectController.projectBulkDeleteController
+);
 
 export default projectRoutes;

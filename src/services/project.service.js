@@ -141,3 +141,82 @@ export const updateProjectService = async (projectId, updateData, userId) => {
     };
   }
 };
+
+export const projectListService = async ({ limit, page, search, user }) => {
+  try {
+    const filter = {
+      organizationId: user.organizationId,
+      isActive: true,
+    };
+
+    /** Search by project name or key */
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { project_key: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const options = {
+      page,
+      limit,
+      sort: { createdAt: -1 },
+      populate: [{ path: 'leadId', select: 'name email' }],
+    };
+
+    return await DataBaseHelper.getAllRecords('project.model', filter, options);
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Failed to fetch projects',
+    };
+  }
+};
+
+export const projectDeleteService = async (projectId, user) => {
+  try {
+    if (!user?.organizationId) {
+      throw { statusCode: 401, message: 'Invalid user context' };
+    }
+
+    const filter = {
+      _id: projectId,
+      organizationId: user.organizationId,
+    };
+
+    const result = await DataBaseHelper.deleteRecordsByKey(
+      'project.model',
+      filter
+    );
+
+    if (!result.deletedCount) {
+      throw { statusCode: 404, message: 'Project not found' };
+    }
+
+    return result;
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Failed to delete project',
+    };
+  }
+};
+export const projectBulkDeleteService = async (projectIds, user) => {
+  try {
+    if (!user?.organizationId) {
+      throw { statusCode: 401, message: 'Invalid user context' };
+    }
+
+    const filter = {
+      _id: { $in: projectIds },
+      organizationId: user.organizationId,
+    };
+
+    return await DataBaseHelper.deleteManyRecords('project.model', filter);
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Failed to delete projects',
+    };
+  }
+};
