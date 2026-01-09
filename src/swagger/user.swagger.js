@@ -152,14 +152,17 @@
  *         description: Internal server error
  */
 
-//? Update User
+//? Update User Profile (Setup Step 2)
 /**
  * @swagger
  * /api/user/user-update/{id}:
  *   put:
  *     tags: [User]
- *     summary: Update user
- *     description: Update user profile details. Requires authentication.
+ *     summary: Update user profile
+ *     description: >
+ *       Updates user profile details.
+ *       If this is the first profile update by an admin user,
+ *       onboarding `setupStep` automatically advances from 1 → 2.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -181,19 +184,16 @@
  *                 example: John Doe
  *               jobTitle:
  *                 type: string
- *                 example: Senior Backend Developer
+ *                 example: Engineering Manager
  *               avatarUrl:
  *                 type: string
  *                 example: https://cdn.example.com/avatar.png
  *               work_email:
  *                 type: string
- *                 example: john.doe@company.com
+ *                 example: john@company.com
  *               company_name:
  *                 type: string
  *                 example: TaskOBucket Inc
- *               isActive:
- *                 type: boolean
- *                 example: true
  *     responses:
  *       200:
  *         description: User updated successfully

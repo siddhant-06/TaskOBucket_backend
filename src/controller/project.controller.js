@@ -97,7 +97,7 @@ export const projectListController = async (req, res) => {
   try {
     const { limit = 10, page = 1, search = '' } = req.query;
     const user = req.user;
-    console.log(req);
+
     const projects = await ProjectService.projectListService({
       limit: Number(limit),
       page: Number(page),

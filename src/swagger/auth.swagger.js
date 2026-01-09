@@ -5,7 +5,12 @@
  *   post:
  *     tags: [Auth]
  *     summary: User login
- *     description: Authenticates user and returns JWT token. If requiresSetup is true, frontend must redirect user to organization setup.
+ *     description: >
+ *       Authenticates user and returns JWT token.
+ *       The `setupStep` field indicates onboarding progress:
+ *       1 = Profile setup pending,
+ *       2 = Organization setup pending,
+ *       3 = Setup completed.
  *     requestBody:
  *       required: true
  *       content:
@@ -18,7 +23,7 @@
  *             properties:
  *               email:
  *                 type: string
- *                 example: user@example.com
+ *                 example: admin@example.com
  *               password:
  *                 type: string
  *                 example: Password@123
@@ -38,7 +43,7 @@
  *                   example: 200
  *                 message:
  *                   type: string
- *                   example: Login Successful
+ *                   example: Login successful
  *                 result:
  *                   type: object
  *                   properties:
@@ -47,14 +52,14 @@
  *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *                     name:
  *                       type: string
- *                       example: John Doe
- *                     requiresSetup:
- *                       type: boolean
- *                       example: true
+ *                       example: Admin User
+ *                     setupStep:
+ *                       type: number
+ *                       example: 1
  *       401:
- *         description: Invalid email or password
- *       404:
- *         description: User not found
+ *         description: Invalid password
+ *       403:
+ *         description: User not activated
  *       500:
  *         description: Internal server error
  */
