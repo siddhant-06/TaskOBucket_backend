@@ -88,4 +88,18 @@ export const constants = {
 
     SERVER_ERROR: 'Internal Server Error',
   },
+  Issue: {
+    ISSUE_CREATED: 'Issue created successfully',
+    ISSUE_UPDATED: 'Issue updated successfully',
+    ISSUE_NOT_CREATED: 'Issue creation failed',
+    ISSUE_NOT_UPDATED: 'Issue update failed',
+    ISSUE_NOT_FOUND: 'Issue not found',
+
+    USER_NO_ORG: 'User does not belong to any organization',
+    ONLY_ADMIN: 'Only organization admin can manage issue',
+    UNAUTHORIZED_PROJECT_ACCESS: 'Unauthorized project access',
+    INVALID_DATE_RANGE: 'Start date must be before end date',
+
+    SERVER_ERROR: 'Internal Server Error',
+  },
 };
