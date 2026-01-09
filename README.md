@@ -1,4 +1,5 @@
 # NodeJs-Repository
+
 # TaskOBucket
 
 A Node.js backend project designed for project management services, built with Express, Mongoose, and modular architecture.
@@ -8,6 +9,7 @@ A Node.js backend project designed for project management services, built with E
 ## 📦 Project Structure
 
 This project is built using:
+
 - **Express.js** for server-side handling
 - **Mongoose** for MongoDB integration
 - **JWT & Bcrypt** for authentication
@@ -27,7 +29,7 @@ cd TaskOBucket
 npm install
 
 ## .env
-PORT=3000
+PORT=7000
 MONGO_URI=mongodb://localhost:27017/taskOBucket
 JWT_SECRET=your_jwt_secret
 
@@ -35,3 +37,4 @@ JWT_SECRET=your_jwt_secret
 ##Testing/
 npm run test:coverage
 
+```

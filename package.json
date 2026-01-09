@@ -1,9 +1,10 @@
 {
-  "name": "thyro-wellness",
+  "name": "taskOBucket",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "echo \"No build required for Node.js backend\"",
     "dev": "nodemon index.js",
     "start": "node index.js",
     "test:coverage": "cmd /C \"nyc mocha --exit & rimraf .nyc_output coverage-report\"",
