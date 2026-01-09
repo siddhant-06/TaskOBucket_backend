@@ -43,6 +43,7 @@ export const createOrganizationService = async (data, userId) => {
     await DataBaseHelper.updateRecordById('user.model', userId, {
       organizationId: organization._id,
       isOrgAdmin: true,
+      setupStep: 3,
     });
 
     return organization;

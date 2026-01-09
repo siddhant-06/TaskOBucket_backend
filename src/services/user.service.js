@@ -63,9 +63,29 @@ export const getUserByIdService = async (id) => {
 // Service to update a user by ID
 export const updateUserService = async (id, updateData) => {
   try {
+    // Fetch existing user
+    delete updateData.setupStep;
+
+    const user = await DataBaseHelper.getRecordById('user.model', id);
+
+    if (!user) {
+      throw { statusCode: 404, message: 'User not found' };
+    }
+
+    /**
+     * STEP-2 LOGIC
+     * If admin is completing profile for the first time
+     */
+    if (user.isOrgAdmin && user.setupStep === 1) {
+      updateData.setupStep = 2;
+    }
+
     return await DataBaseHelper.updateRecordById('user.model', id, updateData);
   } catch (error) {
-    throw error;
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Failed to update user',
+    };
   }
 };
 
@@ -91,7 +111,7 @@ export const deleteAllUsersService = async (filter) => {
 export const inviteUserService = async ({ email, name }, adminUser) => {
   try {
     /**  Admin check */
-    if (!adminUser.isOrgAdmin) {
+    if (!adminUser.isOrgAdmin && !adminUser.organizationId) {
       throw {
         statusCode: 403,
         message: userConstant.ONLY_ADMIN_CAN_INVITE,
@@ -151,7 +171,7 @@ export const inviteUserService = async ({ email, name }, adminUser) => {
     });
 
     /**  Send invite email */
-    const inviteLink = `${process.env.FRONTEND_URL}/accept-invite?token=${inviteToken}`;
+    const inviteLink = `${process.env.FRONTEND_URL_INVITE}/?token=${inviteToken}`;
 
     await sendEmail({
       to: email,

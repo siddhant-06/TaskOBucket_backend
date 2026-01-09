@@ -22,6 +22,7 @@ export const loginService = async ({ email, password }) => {
       passwordHash: hashedPassword,
       isActive: true,
       isOrgAdmin: true,
+      setupStep: 1,
     });
 
     const token = await generateJwtToken(newUser);
@@ -29,7 +30,7 @@ export const loginService = async ({ email, password }) => {
     return {
       token,
       name: newUser.name || '',
-      requiresSetup: true,
+      setupStep: newUser.setupStep,
       id: newUser._id,
     };
   }
@@ -93,7 +94,7 @@ export const forgotPasswordService = async (email) => {
     });
 
     // Create reset link
-    const resetLink = `${process.env.FRONTEND_URL}?token=${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL_RESET}?token=${resetToken}`;
 
     // Send reset email
     await sendEmail({

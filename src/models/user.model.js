@@ -24,6 +24,10 @@ const UserSchema = new mongoose.Schema(
     isInvited: { type: Boolean, default: false },
     inviteToken: { type: String },
     inviteTokenExpires: { type: Date },
+    setupStep: {
+      type: Number,
+      default: 1,
+    },
   },
   { timestamps: true }
 );

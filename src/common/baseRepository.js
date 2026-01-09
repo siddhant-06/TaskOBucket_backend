@@ -308,3 +308,27 @@ export const getRecordByIdFilter = async (
     };
   }
 };
+
+// Update multiple records at once (bulk update)
+export const updateManyRecords = async (modelName, filter, update) => {
+  try {
+    const dynamicImportModel = await import(`../models/${modelName}.js`).then(
+      (module) => module.default
+    );
+
+    if (!filter || typeof filter !== 'object') {
+      throw { statusCode: 400, message: 'Invalid filter object' };
+    }
+
+    if (!update || typeof update !== 'object') {
+      throw { statusCode: 400, message: 'Invalid update object' };
+    }
+
+    return await dynamicImportModel.updateMany(filter, update);
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Error updating multiple records',
+    };
+  }
+};
