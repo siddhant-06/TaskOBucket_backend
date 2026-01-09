@@ -21,3 +21,7 @@ export const updateSprintValidation = Joi.object({
     .optional(),
   position: Joi.number().min(1).optional(),
 }).min(1);
+
+export const getByIdSprintValidation = Joi.object({
+  id: Joi.string().length(24).hex().required(),
+});

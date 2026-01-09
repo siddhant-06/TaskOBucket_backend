@@ -5,6 +5,7 @@ import { constants } from '../common/constant.js';
 const sprintConstant = constants.Sprint;
 const projectConstant = constants.Project;
 
+// service to create sprint
 export const createSprintService = async (data, user) => {
   try {
     if (!user.organizationId) {
@@ -78,6 +79,7 @@ export const createSprintService = async (data, user) => {
   }
 };
 
+// service to update sprint
 export const updateSprintService = async (sprintId, updateData, user) => {
   try {
     const sprint = await DataBaseHelper.getRecordById('sprint.model', sprintId);
@@ -134,6 +136,103 @@ export const updateSprintService = async (sprintId, updateData, user) => {
     throw {
       statusCode: error.statusCode || 500,
       message: error.message || 'Sprint update failed',
+    };
+  }
+};
+
+// service to get by id sprint
+export const getByIdSprintService = async (sprintId, user) => {
+  try {
+    // project check
+    const sprint = await DataBaseHelper.getRecordById('sprint.model', sprintId);
+
+    if (!sprint) {
+      throw { statusCode: 404, message: sprintConstant.SPRINT_NOT_FOUND };
+    }
+
+    // project check
+    const project = await DataBaseHelper.getRecordById(
+      'project.model',
+      sprint.projectId
+    );
+
+    if (!project) {
+      throw { statusCode: 404, message: 'Project not found' };
+    }
+
+    // organization check
+    if (project.organizationId.toString() !== user.organizationId.toString()) {
+      throw {
+        statusCode: 403,
+        message: sprintConstant.UNAUTHORIZED_PROJECT_ACCESS,
+      };
+    }
+
+    return sprint;
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || sprintConstant.SERVER_ERROR,
+    };
+  }
+};
+
+// service to list all  sprint with filters
+export const listSprintService = async (filters, user) => {
+  try {
+    const { projectId, search = '', status, startDate, endDate } = filters;
+
+    if (!projectId) {
+      throw { statusCode: 400, message: sprintConstant.PROJECT_ID_REQUIRED };
+    }
+
+    const project = await DataBaseHelper.getRecordById(
+      'project.model',
+      projectId
+    );
+
+    if (!project) {
+      throw { statusCode: 404, message: projectConstant.PROJECT_NOT_FOUND };
+    }
+
+    if (project.organizationId.toString() !== user.organizationId.toString()) {
+      throw {
+        statusCode: 403,
+        message: sprintConstant.UNAUTHORIZED_PROJECT_ACCESS,
+      };
+    }
+
+    /*filters*/
+
+    const filter = { projectId, isActive: true };
+
+    if (status) {
+      filter.status = status;
+    }
+    if (search) {
+      filter.search = { $regex: search, $options: 'i' };
+    }
+    if (startDate && endDate) {
+      filter.startDate = {};
+
+      if (startDate) {
+        filter.startDate.$gte = new Date(startDate);
+      }
+      if (endDate) {
+        filter.startDate.$lt = new Date(endDate);
+      }
+    }
+
+    return await DataBaseHelper.findRecords(
+      'sprint.model',
+      filter,
+      {},
+      { sort: { status: 1, position: 1 } }
+    );
+  } catch (error) {
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || sprintConstant.SERVER_ERROR,
     };
   }
 };

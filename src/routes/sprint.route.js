@@ -18,11 +18,27 @@ sprintRoutes.post(
   payloadValidate(createSprintValidation),
   sprintController.createSprintController
 );
-sprintRoutes.post(
-  sprintRoutesList.create,
+
+// get sprint by id
+sprintRoutes.get(
+  sprintRoutesList.getById,
+  authGuard,
+  sprintController.getByIdSprintController
+);
+
+// update sprint - with Kanban dashBoard
+sprintRoutes.put(
+  sprintRoutesList.update,
   authGuard,
   payloadValidate(updateSprintValidation),
   sprintController.updateSprintController
+);
+
+// list all sprints with filters
+sprintRoutes.get(
+  sprintRoutesList.list,
+  authGuard,
+  sprintController.listSprintController
 );
 
 export default sprintRoutes;
