@@ -41,10 +41,11 @@ export const deleteMultipleUsersValidation = Joi.object({
 export const inviteUserValidation = Joi.object({
   email: Joi.string().email().required(),
   name: Joi.string().min(2).required(),
+  role: Joi.string().required(),
 });
 
 export const acceptInviteValidation = Joi.object({
-  // token: Joi.string().required(),
-  password: Joi.string().min(6).required(),
+  token: Joi.string().required(),
+  newPassword: Joi.string().min(6).required(),
   confirmPassword: Joi.string().required(),
 });

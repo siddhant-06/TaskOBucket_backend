@@ -108,7 +108,7 @@ export const deleteAllUsersService = async (filter) => {
 };
 
 // service to invite user via email
-export const inviteUserService = async ({ email, name }, adminUser) => {
+export const inviteUserService = async ({ email, name, role }, adminUser) => {
   try {
     /**  Admin check */
     if (!adminUser.isOrgAdmin && !adminUser.organizationId) {
@@ -127,6 +127,7 @@ export const inviteUserService = async ({ email, name }, adminUser) => {
       user = await DataBaseHelper.createRecord('user.model', {
         name,
         email,
+        role,
         organizationId: adminUser.organizationId,
         isActive: false,
         isInvited: true,

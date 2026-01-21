@@ -1,9 +1,11 @@
 import Joi from 'joi';
 
 export const createProjectValidation = Joi.object({
+  leadId: Joi.string(),
   name: Joi.string().min(3).max(50).required(),
   project_key: Joi.string().min(2).max(10).required(),
   description: Joi.string().min(3).max(200).optional(),
+  teamMembers: Joi.array(),
 });
 
 export const getProjectByIdValidation = Joi.object({

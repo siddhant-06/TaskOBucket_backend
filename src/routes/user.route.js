@@ -72,7 +72,7 @@ userRoutes.post(
 );
 
 /** Accept invite  users */
-userRoutes.post(
+userRoutes.put(
   routeName.acceptInvite,
   payloadValidate(acceptInviteValidation),
   userController.acceptInviteController

@@ -199,12 +199,12 @@ export const deleteAllUsersController = async (req, res) => {
 //Controller to  invite user via email
 export const inviteUserController = async (req, res) => {
   try {
-    const { email, name } = req.body;
+    const { email, name, role } = req.body;
 
     // Logged-in admin (from authGuard)
     const adminUser = req.user;
 
-    await UserService.inviteUserService({ email, name }, adminUser);
+    await UserService.inviteUserService({ email, name, role }, adminUser);
 
     return sendSuccessResponse(res, userConstant.USER_INVITE_SENT, {}, 200);
   } catch (error) {
@@ -220,13 +220,13 @@ export const inviteUserController = async (req, res) => {
 export const acceptInviteController = async (req, res) => {
   try {
     const { token } = req.query;
-    const { password, confirmPassword } = req.body;
+    const { confirmPassword, newPassword } = req.body;
 
-    if (password !== confirmPassword) {
+    if (newPassword !== confirmPassword) {
       return sendErrorResponse(res, 400, userConstant.PASSWORD_MISMATCH);
     }
 
-    await UserService.acceptInviteService(token, password);
+    await UserService.acceptInviteService(token, newPassword);
 
     return sendSuccessResponse(res, userConstant.INVITE_ACCEPTED, {}, 200);
   } catch (error) {
