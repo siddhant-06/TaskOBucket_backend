@@ -88,4 +88,17 @@ export const constants = {
 
     SERVER_ERROR: 'Internal Server Error',
   },
+
+  // Issues
+  Issue: {
+    ISSUE_CREATED: 'Issue created successfully',
+    ISSUE_UPDATED: 'Issue updated successfully',
+    ISSUE_FETCHED: 'Issue fetched successfully',
+    ISSUE_LIST_FETCHED: 'Issue list fetched successfully',
+    ISSUE_DELETED: 'Issue deleted successfully',
+    ISSUE_NOT_FOUND: 'Issue not found',
+    ISSUE_NOT_CREATED: 'Issue creation failed',
+    ISSUE_NOT_UPDATED: 'Issue update failed',
+    SERVER_ERROR: 'Internal Server Error',
+  },
 };
